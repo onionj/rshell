@@ -9,12 +9,13 @@ import (
 	"strings"
 )
 
-func NewTelegramMessenger(ChatID int64, TelegramToken string) *TelegramMessenger {
+func NewTelegramMessenger(ChatID int64, TelegramToken string, Version string) *TelegramMessenger {
 	var telegram TelegramMessenger
 	telegram.ChatID = ChatID
 	telegram.TelegramToken = TelegramToken
 	telegram.updateID = 0
 	telegram.isFirstRun = true
+	telegram.Version = Version
 	return &telegram
 }
 
@@ -23,6 +24,7 @@ type TelegramMessenger struct {
 	TelegramToken string
 	updateID      int64
 	isFirstRun    bool
+	Version       string
 }
 
 // send msg to telegram
@@ -59,6 +61,16 @@ func (t *TelegramMessenger) Recive() ([]string, error) {
 	var getUpdate telegramGetUpdateResponse
 	json.NewDecoder(response.Body).Decode(&getUpdate)
 
+	if len(getUpdate.Result) < 1 {
+
+		// if first run and getUpdate page is empty, set isFirstRun to False.
+		if t.isFirstRun {
+			t.isFirstRun = false
+		}
+
+		return nil, errors.New("new message not found")
+	}
+
 	// get last admin command
 	adminCommand, err := t.lastAdminmessage(getUpdate)
 
@@ -77,10 +89,6 @@ func (t *TelegramMessenger) Recive() ([]string, error) {
 
 // extract last admin message and remove previous messages
 func (t *TelegramMessenger) lastAdminmessage(getUpdate telegramGetUpdateResponse) ([]string, error) {
-
-	if len(getUpdate.Result) < 1 {
-		return nil, errors.New("message not found")
-	}
 
 	var adminCommanFound bool
 	var alreadyExecuted bool
