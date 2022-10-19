@@ -1,16 +1,15 @@
-package execute
+package main
 
 import (
 	"fmt"
 	"os"
 	"os/exec"
-	"rshell/messenger"
 	"strings"
 	"time"
 )
 
 // run command in background and Send result to telegram
-func RunCommand(messenger *messenger.TelegramMessenger, command []string) {
+func RunCommand(messenger *TelegramMessenger, command []string) {
 
 	// cerate response tmplate
 	returnMessageTemplate := fmt.Sprintf("COMMAND: \n%s\n\nOUTPUT:\n\n", strings.Join(command, " ")) + "%s"
@@ -45,7 +44,7 @@ func RunCommand(messenger *messenger.TelegramMessenger, command []string) {
 		*pDoneFlag = true
 	}()
 
-	// if command done in 4 second:
+	// if command done in 4 second return response:
 	for i := 0; i < 4; i++ {
 		time.Sleep(time.Second)
 		if doneFlag {

