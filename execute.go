@@ -12,7 +12,7 @@ import (
 func RunCommand(messenger *TelegramMessenger, command []string) {
 
 	// cerate response tmplate
-	returnMessageTemplate := fmt.Sprintf("COMMAND: \n%s\n\nOUTPUT:\n\n", strings.Join(command, " ")) + "%s"
+	returnMessageTemplate := fmt.Sprintf("- [rshell version]:\n%s\n\n- [COMMAND]: \n%s\n\n- [OUTPUT]:\n", messenger.Version, strings.Join(command, " ")) + "%s"
 
 	// change dir
 	if command[0] == "cd" {

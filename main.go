@@ -8,10 +8,12 @@ import (
 const CHAT_ID int64 = 90311632                                      // change this
 const TELEGRAM_TOKEN string = "5526760482:AAGweoNtLrHEsLC6whjms78y" // change this
 
+const VERSION string = "0.1"
+
 func main() {
 
 	// create telegram engine
-	telegram := *NewTelegramMessenger(CHAT_ID, TELEGRAM_TOKEN)
+	telegram := *NewTelegramMessenger(CHAT_ID, TELEGRAM_TOKEN, VERSION)
 
 	for ; ; time.Sleep(time.Second) {
 
